@@ -4,6 +4,7 @@ import { fixupPluginRules } from '@eslint/compat';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
+import eslintPluginJest from 'eslint-plugin-jest';
 
 /** @type {import("eslint").Linter.FlatConfig[];} */
 export default tsEslint.config(
@@ -54,6 +55,23 @@ export default tsEslint.config(
     rules: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ...eslintPluginReactHooks.configs.recommended.rules,
+    },
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  {
+    files: ['tests/**'],
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    ...eslintPluginJest.configs['flat/recommended'],
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    ...eslintPluginJest.configs['flat/style'],
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    rules: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      ...eslintPluginJest.configs['flat/recommended'].rules,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      ...eslintPluginJest.configs['flat/style'].rules,
+      'jest/consistent-test-it': 'error',
+      'jest/require-top-level-describe': 'error',
     },
   },
 );
