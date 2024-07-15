@@ -16,6 +16,7 @@ export const Client: React.FC<{ dehydratedState: DehydratedState }> = ({
   dehydratedState,
 }) => {
   const [queryClient] = useState(() => new QueryClient());
+  // https://github.com/jotaijs/jotai-tanstack-query/issues/37#issuecomment-1692616725
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>
@@ -67,6 +68,15 @@ const Content: React.FC = () => {
   const { data } = useAtomValue(queryAtomWithQuery);
   const increment = () => setPage((c) => c + 1);
   const decrement = () => setPage((c) => c - 1);
+
+  const queryClient = useAtomValue(queryClientAtom);
+  const invalidateQueries = () => {
+    queryClient
+      .invalidateQueries({
+        queryKey: ['page'],
+      })
+      .catch(console.error);
+  };
   return (
     <div>
       <p>Page: {page}</p>
@@ -83,6 +93,12 @@ const Content: React.FC = () => {
         Decrement
       </button>
       {data ? <p>Result: {data}</p> : <p>Loading...</p>}
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={invalidateQueries}
+      >
+        Invalidate
+      </button>
     </div>
   );
 };
